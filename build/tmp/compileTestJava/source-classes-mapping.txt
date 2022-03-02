@@ -1,0 +1,4 @@
+guru/qa/JunitCore.java
+ guru.qa.JunitCore
+guru/qa/SimpleTests.java
+ guru.qa.SimpleTests
