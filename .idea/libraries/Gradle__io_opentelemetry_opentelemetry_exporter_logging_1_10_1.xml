@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.opentelemetry:opentelemetry-exporter-logging:1.10.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opentelemetry/opentelemetry-exporter-logging/1.10.1/e6d36fa387a46ab5b3d5cc35f69ebe52d4845e7a/opentelemetry-exporter-logging-1.10.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opentelemetry/opentelemetry-exporter-logging/1.10.1/debad961824c3c200d685bd1cbff0afe45ca4a35/opentelemetry-exporter-logging-1.10.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

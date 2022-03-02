@@ -9,9 +9,10 @@ public class JunitCore {
 
     public static void main(String[] args) throws Exception {
         // lookup classes with annotation @Test
-        // for education lets consider here is just one class SimpleTests
+        // here we go with class SimpleTest.class
 
         Class clazz = SimpleTests.class;
+        // run all methods with @Test
         for (Method method : clazz.getDeclaredMethods()) {
             Test methodAnnotation = method.getAnnotation(Test.class);
             if (methodAnnotation != null) {
@@ -20,19 +21,18 @@ public class JunitCore {
                     method.invoke(clazz.getConstructor().newInstance());
                 } catch (InvocationTargetException e) {
                     if (e.getCause() instanceof AssertionError) {
-                        System.out.println("Test failed " + method.getName());
-                        continue;}
-                    else {
-                        System.out.println("Tet broken " + method.getName());
+                        System.out.println("Test failed: " + method.getName());
                         continue;
-                        }
+                    } else {
+                        System.out.println("Test broken: " + method.getName());
+                        continue;
                     }
+                }
                 System.out.println("Test passed: " + method.getName());
             }
         }
 
-
-        // run all methods marked @Test
+        // run all methods with @Test
 
         // print results
     }
