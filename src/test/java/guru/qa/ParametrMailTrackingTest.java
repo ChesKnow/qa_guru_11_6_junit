@@ -50,16 +50,20 @@ public class ParametrMailTrackingTest {
 
     static Stream<Arguments> mixedArgumentsTest() {
         return Stream.of(
-                Arguments.of("обл Калининградская, г Калининград",2, "2-4 дня"),
-                Arguments.of("край Приморский, г Владивосток",2,"8-10 дней")
+                Arguments.of("г Москва","обл Калининградская, г Калининград",2, "2-4 дня"),
+                Arguments.of("г Москва","край Приморский, г Владивосток",2,"8-10 дней")
         );
     }
     @MethodSource(value = "mixedArgumentsTest")
     @ParameterizedTest(name = "{2}")
-    void mixedArgumentTest(String addressCity, int weight, String expectedDeliveryDate) {
+    void mixedArgumentTest(String addressFrom, String addressTo, int weight, String expectedDeliveryDate) {
 
-        Selenide.$("input[name=AddressTo]").setValue(addressCity).click();
-        Selenide.$(withText(addressCity)).click();
+        Selenide.$("input[name=AddressFrom]");
+        Selenide.$("input[name=AddressFrom]").setValue("");
+        Selenide.$("input[name=AddressFrom]").setValue(addressFrom).click();
+        Selenide.$(withText(addressFrom)).click();
+        Selenide.$("input[name=AddressTo]").setValue(addressTo).click();
+        Selenide.$(withText(addressTo)).click();
         Selenide.$("#Weight").sendKeys(String.valueOf(weight)+Keys.ENTER);
         Selenide.$("#parcel-summary").shouldHave(text(expectedDeliveryDate));
     }
