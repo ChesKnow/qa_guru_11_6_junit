@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.Keys;
 
+import java.awt.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Condition.text;
@@ -17,6 +19,8 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
 
 public class ParametrMailTrackingTest {
+
+
     @BeforeEach
     void precondition() {
         Selenide.open("https://www.pochta.ru/parcels/");
@@ -55,16 +59,16 @@ public class ParametrMailTrackingTest {
         );
     }
     @MethodSource(value = "mixedArgumentsTest")
-    @ParameterizedTest(name = "{2}")
+    @ParameterizedTest(name = "{3}")
     void mixedArgumentTest(String addressFrom, String addressTo, int weight, String expectedDeliveryDate) {
 
-        Selenide.$("input[name=AddressFrom]");
-        Selenide.$("input[name=AddressFrom]").setValue("");
-        Selenide.$("input[name=AddressFrom]").setValue(addressFrom).click();
+        Selenide.$("input[name=AddressFrom]").sendKeys("" + Keys.LEFT_ALT+Keys.ENTER+Keys.DELETE);
+        Selenide.$("input[name=AddressFrom]").sendKeys(addressFrom);
         Selenide.$(withText(addressFrom)).click();
-        Selenide.$("input[name=AddressTo]").setValue(addressTo).click();
+        ;
+        Selenide.$("input[name=AddressTo]").setValue(addressTo);
         Selenide.$(withText(addressTo)).click();
         Selenide.$("#Weight").sendKeys(String.valueOf(weight)+Keys.ENTER);
-        Selenide.$("#parcel-summary").shouldHave(text(expectedDeliveryDate));
+        Selenide.$("#parcel-summary").find(withText(expectedDeliveryDate));
     }
 }
