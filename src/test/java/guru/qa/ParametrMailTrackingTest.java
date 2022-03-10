@@ -3,6 +3,8 @@ package guru.qa;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -18,13 +20,9 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
 
+@DisplayName("Сайт Почты России")
 public class ParametrMailTrackingTest {
 
-
-    @BeforeEach
-    void precondition() {
-        Selenide.open("https://www.pochta.ru/parcels/");
-    }
 
     @AfterEach
     void closeBrowser() {
@@ -32,23 +30,32 @@ public class ParametrMailTrackingTest {
     }
 
     @ValueSource(strings = {"RF776045417SG", "RF775860395SG", "RF775827050SG"})
-    @ParameterizedTest(name = "Проверка отображения трекинга почтовых отправлений на сайте Почты России для \"{0}\"")
+    @ParameterizedTest(name = "для \"{0}\"")
+    @DisplayName("Проверка отображения трекинга почтовых отправлений")
     void commonSearchTest(String testData) {
+        Selenide.open("https://www.pochta.ru/");
         Selenide.$("#barcode").setValue(testData).pressEnter();
         Selenide.$$("#page-tracking").find(text(testData)).shouldBe(visible);
     }
 
     @CsvSource(value = {
-            "обл Калининградская, г Калининград|2|2-4 дня",
-            "край Приморский, г Владивосток|2|8-10 дней"
+            "г Москва|обл Калининградская, г Калининград|2|2-4 дня",
+            "г Москва|край Приморский, г Владивосток|2|8-10 дней"
     },
             delimiterString = "|")
-    @ParameterizedTest(name = "Проверка правильности расчета срока доставки посылки обыкновенной \n" +
+    @ParameterizedTest(name = "посылки обыкновенной \n" +
             "   весом 2 кг из Москвы в {0}")
-    void complexSearchTest(String addressCity, String weight, String expectedDeliveryDate) {
-        Selenide.$("input[name=AddressTo]").sendKeys(addressCity+ Keys.ENTER);
-        Selenide.$("#Weight").scrollTo().sendKeys(weight+Keys.ENTER);
-        Selenide.$("#parcel-summary").shouldHave(text(expectedDeliveryDate));
+    @DisplayName("Проверка сроков доставки на сайте")
+    void complexSearchTest(String addressFrom, String addressTo, String weight, String expectedDeliveryDate) {
+        Selenide.open("https://www.pochta.ru/parcels/");
+        Selenide.$("input[name=AddressFrom]").sendKeys("" + Keys.LEFT_ALT+Keys.ENTER+Keys.DELETE);
+        Selenide.$("input[name=AddressFrom]").sendKeys(addressFrom);
+        Selenide.$(withText(addressFrom)).click();
+        ;
+        Selenide.$("input[name=AddressTo]").setValue(addressTo);
+        Selenide.$(withText(addressTo)).click();
+        Selenide.$("#Weight").sendKeys(String.valueOf(weight)+Keys.ENTER);
+        Selenide.$("#parcel-summary").find(withText(expectedDeliveryDate));
 
     }
 
@@ -58,8 +65,10 @@ public class ParametrMailTrackingTest {
                 Arguments.of("г Москва","край Приморский, г Владивосток",2,"8-10 дней")
         );
     }
+    @Disabled
     @MethodSource(value = "mixedArgumentsTest")
     @ParameterizedTest(name = "{3}")
+    @DisplayName("Проверка сроков доставки на сайте")
     void mixedArgumentTest(String addressFrom, String addressTo, int weight, String expectedDeliveryDate) {
 
         Selenide.$("input[name=AddressFrom]").sendKeys("" + Keys.LEFT_ALT+Keys.ENTER+Keys.DELETE);
